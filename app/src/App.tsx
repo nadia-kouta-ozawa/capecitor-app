@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { NewsArticle } from './types/news'
 import Header from './components/Header'
 import NewsList from './components/NewsList'
@@ -9,10 +9,24 @@ function App() {
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('darkMode');
+      if (stored) {
+        return stored === 'true';
+      }
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     return false;
   });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('darkMode', 'false');
+    }
+  }, [isDarkMode]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -27,8 +41,7 @@ function App() {
   };
 
   return (
-    <div className={isDarkMode ? 'dark' : ''}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
         <Header 
           onToggleDarkMode={toggleDarkMode}
           isDarkMode={isDarkMode}
@@ -47,7 +60,6 @@ function App() {
           )}
         </main>
       </div>
-    </div>
   );
 }
 
