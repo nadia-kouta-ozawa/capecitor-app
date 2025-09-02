@@ -13,7 +13,7 @@ export default function Header({ onToggleDarkMode, isDarkMode }: HeaderProps) {
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">N</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-white-900 dark:text-white">
               ニュースアプリ
             </h1>
           </div>

@@ -6,7 +6,7 @@
 
 ```
 capecitor-app/
-├── api/news-api/          # Laravel API (バックエンド)
+├── backend/news-api/      # Laravel API (バックエンド)
 ├── app/                   # React Capacitor App (フロントエンド)
 └── README.md
 ```
@@ -23,7 +23,7 @@ capecitor-app/
 
 1. **Laravel API ディレクトリに移動**
    ```bash
-   cd api/news-api
+   cd backend/news-api
    ```
 
 2. **依存関係のインストール**
@@ -66,7 +66,7 @@ capecitor-app/
 
 ```bash
 # Laravel API サーバー起動
-cd api/news-api
+cd backend/news-api
 php artisan serve --port=8000
 ```
 
@@ -261,7 +261,7 @@ try {
 ### 方法3: Laravel Tinker を使用（開発・テスト用）
 
 ```bash
-cd api/news-api
+cd backend/news-api
 php artisan tinker
 ```
 
@@ -381,7 +381,7 @@ App\Models\News::count(); // 総記事数
 ## 🧪 テストデータの一括作成
 
 ```bash
-cd api/news-api
+cd backend/news-api
 php artisan tinker
 ```
 
