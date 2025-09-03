@@ -8,7 +8,7 @@ const getApiBaseUrl = () => {
   // Capacitorアプリ（iOS/Android）
   // 実際のIPアドレスを使用（ローカルネットワークの場合）
   // 本番環境では実際のサーバーURLに変更してください
-  return 'http://192.168.11.8:8000/api'; // 実際のマシンのIPアドレス
+  return 'http://192.168.100.33:8000/api'; // 実際のマシンのIPアドレス
 };
 
 const API_BASE_URL = getApiBaseUrl();

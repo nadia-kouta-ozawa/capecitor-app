@@ -195,6 +195,7 @@ Laravel APIでニュース記事を登録する方法は複数あります。以
 
 #### cURLを使用した登録
 
+**ローカル環境（PC）から登録する場合:**
 ```bash
 curl -X POST http://127.0.0.1:8000/api/news \
   -H "Content-Type: application/json" \
@@ -210,6 +211,25 @@ curl -X POST http://127.0.0.1:8000/api/news \
     "url": "https://example.com/original-article"
   }'
 ```
+
+**ネットワーク経由（Capacitorアプリから）登録する場合:**
+```bash
+curl -X POST http://192.168.100.33:8000/api/news \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Capacitorテスト記事",
+    "description": "Capacitorアプリから投稿されたテスト記事です",
+    "content": "この記事はCapacitorアプリ経由でAPI投稿のテストを行うために作成されました。ネットワーク経由での接続が正常に動作しているかを確認できます。",
+    "image_url": "https://via.placeholder.com/800x600?text=Capacitor+Test",
+    "published_at": "2025-09-03T08:45:00Z",
+    "source": "Capacitor App",
+    "category": "technology",
+    "author": "モバイル開発者",
+    "url": "https://example.com/capacitor-test"
+  }'
+```
+
+> **注意:** IPアドレス `192.168.100.33` は現在のネットワーク設定に基づいています。環境が変わった場合は適切なIPアドレスに変更してください。
 
 #### 成功レスポンス例
 ```json
@@ -314,7 +334,9 @@ foreach ($articles as $article) {
 
 1. **新しいリクエストを作成**
 2. **メソッド**: `POST`
-3. **URL**: `http://127.0.0.1:8000/api/news`
+3. **URL**: 
+   - ローカル: `http://127.0.0.1:8000/api/news`
+   - ネットワーク: `http://192.168.100.33:8000/api/news` (Capacitor環境テスト用)
 4. **Headers**:
    - `Content-Type: application/json`
 5. **Body** (raw JSON):
@@ -365,17 +387,34 @@ foreach ($articles as $article) {
 ## 🔍 登録後の確認方法
 
 ### 作成された記事の確認
+
+**ローカル環境での確認:**
 ```bash
 # 全記事一覧
 curl http://127.0.0.1:8000/api/news
 
 # 特定記事確認
 curl http://127.0.0.1:8000/api/news/1
+```
 
-# Laravel Tinkerで確認
+**ネットワーク経由での確認（Capacitor環境テスト用）:**
+```bash
+# 全記事一覧
+curl http://192.168.100.33:8000/api/news
+
+# 特定記事確認
+curl http://192.168.100.33:8000/api/news/1
+```
+
+**Laravel Tinkerで確認:**
+```bash
+cd backend/news-api
 php artisan tinker
+```
+```php
 App\Models\News::latest()->first(); // 最新記事
 App\Models\News::count(); // 総記事数
+App\Models\News::where('source', 'Capacitor App')->get(); // Capacitorアプリ投稿記事
 ```
 
 ## 🧪 テストデータの一括作成
@@ -401,6 +440,74 @@ for ($i = 1; $i <= 10; $i++) {
     ]);
 }
 echo "テスト記事10件を作成しました！";
+```
+
+## 🎯 実際の記事登録例（コピペ用）
+
+### 現在の環境用のテスト記事登録
+
+**Laravelサーバー起動確認:**
+```bash
+# サーバーが起動していない場合
+cd backend/news-api
+php artisan serve --host=0.0.0.0 --port=8000
+```
+
+**今すぐ使える記事登録コマンド:**
+```bash
+# テスト記事1: 技術ニュース
+curl -X POST http://192.168.100.33:8000/api/news \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "【最新】AI技術の進歩により開発効率が大幅向上",
+    "description": "最新のAI技術を活用した開発ツールが、プログラマーの生産性を劇的に改善しています。",
+    "content": "人工知能技術の急速な発展により、ソフトウェア開発の現場に革命が起きています。コード補完、バグ検出、自動テストなど、様々な場面でAIが活用されており、開発者の作業効率が従来の3倍以上に向上しているとの調査結果が発表されました。特に注目されているのは、自然言語でプログラムの仕様を記述するだけで、自動的にコードを生成する技術です。",
+    "image_url": "https://via.placeholder.com/800x600?text=AI+Development+Tools",
+    "published_at": "2025-09-03T09:00:00Z",
+    "source": "Tech News Japan",
+    "category": "technology",
+    "author": "田中太郎",
+    "url": "https://example.com/ai-development-2025"
+  }'
+
+# テスト記事2: ビジネスニュース
+curl -X POST http://192.168.100.33:8000/api/news \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "スタートアップ企業のリモートワーク導入率が90%を突破",
+    "description": "2025年の調査により、日本のスタートアップ企業の90%以上がリモートワークを正式採用していることが判明しました。",
+    "content": "働き方改革の進展とデジタル技術の普及により、スタートアップ企業のリモートワーク導入が加速しています。従来のオフィス中心の働き方から、場所にとらわれない柔軟な働き方へのシフトが鮮明になっており、優秀な人材の確保と従業員満足度の向上に大きく貢献しています。また、オフィス賃料の削減により、その分を事業成長への投資に回せるメリットも大きいとされています。",
+    "image_url": "https://via.placeholder.com/800x600?text=Remote+Work+Startup",
+    "published_at": "2025-09-03T08:30:00Z",
+    "source": "Business Today",
+    "category": "business",
+    "author": "佐藤花子",
+    "url": "https://example.com/remote-work-startups-2025"
+  }'
+
+# テスト記事3: Capacitorアプリテスト用
+curl -X POST http://192.168.100.33:8000/api/news \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "モバイルアプリ開発の新潮流：Capacitorが注目される理由",
+    "description": "React、Vue、Angularで作成したWebアプリをそのままモバイルアプリにできるCapacitorの人気が急上昇しています。",
+    "content": "Ionic社が開発したCapacitorは、Web技術を使ってネイティブモバイルアプリを構築できるフレームワークとして、開発者コミュニティで大きな注目を集めています。従来のハイブリッドアプリ開発に比べて、よりネイティブに近いパフォーマンスを実現できることが最大の特徴です。また、既存のWebアプリケーションを最小限の修正でモバイル対応できるため、開発コストの大幅な削減が可能です。",
+    "image_url": "https://via.placeholder.com/800x600?text=Capacitor+Mobile+Development",
+    "published_at": "2025-09-03T10:15:00Z",
+    "source": "Mobile Dev Weekly",
+    "category": "technology",
+    "author": "山田次郎",
+    "url": "https://example.com/capacitor-mobile-development-2025"
+  }'
+```
+
+### 登録後の即座確認
+```bash
+# 登録した記事をすぐに確認
+curl http://192.168.100.33:8000/api/news | jq '.data[] | {id, title, source}'
+
+# 記事数の確認
+curl http://192.168.100.33:8000/api/news | jq '.total'
 ```
 
 ## 🛠️ 開発時のトラブルシューティング
